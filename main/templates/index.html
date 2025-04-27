@@ -1,0 +1,308 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Химиядан деңгейіңді білу{% endblock %}
+
+{% block content %}
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>Химиялық XMind картасы арқылы химия деңгейіңді білу</h1>
+            <p>Бұл сайтта сіз химия пәні бойынша білім деңгейіңізді химиялық XMind картасы арқылы тексере аласыз.</p>
+            <a href="#games" class="hero-btn" id="hero-btn">Ойынды бастау</a>
+        </div>
+        <img src="{% static 'main/img/himiya.jpg' %}" alt="Химия фоны" class="hero-bg">
+    </section>
+
+    <section class="game-section" id="games">
+        <div class="game-header">
+            <h2>Химиялық ойындар</h2>
+            <hr class="divider">
+        </div>
+        <div class="game-grid">
+            <a href="{% url 'chemistry-xmind-game' %}" class="game-card">
+                <div class="game-icon">🧩</div>
+                <h3>Химиялық XMind картасы</h3>
+                <span class="game-start">Ойынды бастау</span>
+            </a>
+            <a href="{% url 'game1' %}" class="game-card">
+                <div class="game-icon">📝</div>
+                <h3>Бос орынды толтыру</h3>
+                <span class="game-start">Ойынды бастау</span>
+            </a>
+            <a href="{% url 'game2' %}" class="game-card">
+                <div class="game-icon">🃏</div>
+                <h3>Химиялық флип</h3>
+                <span class="game-start">Ойынды бастау</span>
+            </a>
+        </div>
+    </section>
+
+    <section class="test-section" id="tests">
+        <div class="test-header">
+            <h2>Химиядан деңгейіңді тексеру</h2>
+            <hr class="divider">
+            <a href="{% url 'history' %}" class="history-btn">📜 Тест тарихы</a>
+        </div>
+        <div class="test-grid">
+            {% for subject in subjects %}
+                <a href="{% url 'test-view' subject.id %}" class="test-card">
+                    <div class="test-icon">🧪</div>
+                    <h3>{{ subject.name }}</h3>
+                    <span class="test-start">Тестті бастау</span>
+                </a>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="creator-section">
+        <div class="creator-header">
+            <h2>Жасаушы туралы</h2>
+            <hr class="divider">
+        </div>
+        <div class="creator-container">
+            <div class="creator-image-wrapper">
+                <img src="{% static 'main/img/author.jpg' %}" alt="Жасаушы суреті" class="creator-img">
+                <div class="image-overlay"></div>
+            </div>
+            <div class="creator-info">
+                <h3>Анарматова Малика Баймуратовна</h3>
+                <p>Астана Халықаралық Университетінің "Химия мұғалімі" мамандығы бойынша білім алушы. Болашақ химия пәні мұғалімі ретінде өзінің кәсіби шеберлігін арттыру жолында белсенді жұмыс атқаруда.</p>
+                <p>Жетістіктері мен тәжірибесі:</p>
+                <p>· 2024 жылдың "Үздік студенті" атағының иегері;</p>
+                <p>· 7-11 сыныптарда химия пәнінен сабақ өткізіп, әр сыныптың жас ерекшелігіне сай тиімді әдіс-тәсілдер қолданады;</p>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        /* Жасаушы туралы бөлім стилі */
+        .creator-section {
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #F9F9FB 0%, #E6E9F0 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .creator-section::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(90, 63, 152, 0.2), transparent);
+            opacity: 0.5;
+        }
+
+        .creator-section::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255, 111, 97, 0.2), transparent);
+            opacity: 0.5;
+        }
+
+        .creator-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            opacity: 0;
+            animation: fadeInDown 0.8s ease-out forwards;
+        }
+
+        .creator-header h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #5A3F98;
+            margin-bottom: 0.5rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .creator-header .divider {
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, #FF6F61, #FF8A80);
+            margin: 0 auto;
+            border-radius: 2px;
+        }
+
+        .creator-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            max-width: 1000px;
+            margin: 0 auto;
+            gap: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            position: relative;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.2s forwards;
+        }
+
+        .creator-image-wrapper {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            flex-shrink: 0;
+        }
+
+        .creator-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+            object-fit: cover;
+            border: 4px solid #FF6F61;
+            transition: transform 0.3s ease;
+        }
+
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(90, 63, 152, 0.1), rgba(255, 111, 97, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .creator-image-wrapper:hover .creator-img {
+            transform: scale(1.05);
+        }
+
+        .creator-image-wrapper:hover .image-overlay {
+            opacity: 1;
+        }
+
+        .creator-info {
+            max-width: 600px;
+            text-align: left;
+        }
+
+        .creator-info h3 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #5A3F98;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .creator-info p {
+            font-size: 1.1rem;
+            color: #4A4A4A;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out 0.4s forwards;
+        }
+
+        .contact-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #FF6F61, #FF8A80);
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out 0.6s forwards;
+        }
+
+        .contact-btn:hover {
+            background: linear-gradient(45deg, #E65A50, #FF6F61);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Анимациялар */
+        @keyframes fadeInDown {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Адаптивтілік */
+        @media (max-width: 768px) {
+            .creator-container {
+                flex-direction: column;
+                text-align: center;
+                padding: 20px;
+                gap: 20px;
+            }
+
+            .creator-image-wrapper {
+                width: 200px;
+                height: 200px;
+            }
+
+            .creator-info h3 {
+                font-size: 1.5rem;
+            }
+
+            .creator-info p {
+                font-size: 1rem;
+            }
+
+            .contact-btn {
+                font-size: 0.9rem;
+                padding: 8px 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .creator-section {
+                padding: 40px 10px;
+            }
+
+            .creator-header h2 {
+                font-size: 1.8rem;
+            }
+
+            .creator-image-wrapper {
+                width: 150px;
+                height: 150px;
+            }
+
+            .creator-info h3 {
+                font-size: 1.3rem;
+            }
+
+            .creator-info p {
+                font-size: 0.9rem;
+            }
+
+            .contact-btn {
+                font-size: 0.8rem;
+                padding: 6px 15px;
+            }
+        }
+    </style>
+
+    <script>
+        document.getElementById('hero-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            const target = document.querySelector('#games');
+            window.scrollTo({
+                top: target.offsetTop - 70,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
+</head>
+<body>
+    <div class="overlay" id="overlay"></div>
+    <header class="site-header">
+        <div class="header-content">
+            <h1>MALIKA</h1>
+            <nav class="header-nav">
+                <div class="burger-menu" id="burger-menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <ul class="nav-links" id="nav-links">
+                    <li><a href="{% url 'tests' %}">Басты бет</a></li>
+                    <li><a href="{% url 'history' %}">Тест тарихы</a></li>
+                    <li class="close-btn" id="close-btn">
+                        <span>×</span>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    {% block content %}
+    {% endblock %}
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>MALIKA</h3>
+                <p>Біздің тесттер мен ойындар арқылы химиядан өз деңгейіңізді анықтаңыз!</p>
+            </div>
+            <div class="footer-section">
+                <h3>Сілтемелер</h3>
+                <ul>
+                    <li><a href="{% url 'tests' %}">Басты бет</a></li>
+                    <li><a href="{% url 'history' %}">Тест тарихы</a></li>
+                    <li><a href="{% url 'chemistry-xmind-game' %}">XMind ойыны</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Байланыс</h3>
+                <p>Email: malikanarmatova@mail.ru</p>
+                <p>Телефон: +7 (700) 761-85-15</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const burgerMenu = document.getElementById('burger-menu');
+        const navLinks = document.getElementById('nav-links');
+        const overlay = document.getElementById('overlay');
+        const closeBtn = document.getElementById('close-btn');
+
+        function toggleMenu() {
+            const isOpen = burgerMenu.classList.toggle('open');
+            if (isOpen) {
+                navLinks.classList.remove('closing');
+                navLinks.classList.add('active');
+                overlay.classList.add('active');
+            } else {
+                navLinks.classList.add('closing');
+                overlay.classList.remove('active');
+            }
+        }
+
+        burgerMenu.addEventListener('click', toggleMenu);
+
+        // Жабу мәзірі сілтемеге басқанда
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                burgerMenu.classList.remove('open');
+                navLinks.classList.add('closing');
+                overlay.classList.remove('active');
+            });
+        });
+
+        // Оверлейге басқанда мәзірді жабу
+        overlay.addEventListener('click', () => {
+            burgerMenu.classList.remove('open');
+            navLinks.classList.add('closing');
+            overlay.classList.remove('active');
+        });
+
+        // "×" түймесіне басқанда мәзірді жабу
+        closeBtn.addEventListener('click', () => {
+            burgerMenu.classList.remove('open');
+            navLinks.classList.add('closing');
+            overlay.classList.remove('active');
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Детали теста{% endblock %}
+
+{% block content %}
+<div class="test-wrapper">
+    <div class="test-header">
+        <h2 class="test-title">Детали теста: {{ test_subject }}</h2>
+        <a href="{% url 'history' %}" class="btn-back">Назад</a>
+    </div>
+    <div class="test-details">
+        {% for item in answers_with_details %}
+            <div class="question-card">
+                <p class="question">{{ item.question.questions }}</p>
+                <div class="answers-grid">
+                    {% for answer in item.all_answers %}
+                        <div class="answer-card 
+                            {% if answer == item.selected_answer %}
+                                {% if item.user_answer.is_correct %}correct{% else %}incorrect{% endif %}
+                            {% elif answer.is_correct %}correct{% endif %}">
+                            <span class="answer-letter">
+                                {% if forloop.counter == 1 %}A
+                                {% elif forloop.counter == 2 %}B
+                                {% elif forloop.counter == 3 %}C
+                                {% elif forloop.counter == 4 %}D
+                                {% endif %}
+                            </span>
+                            <span class="answer-text">{{ answer.answer }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

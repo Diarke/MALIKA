@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Бос орынды толтыр</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #E6E9F0 0%, #F9F9FB 100%);
+            color: #2D2D2D;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #4B3A82;
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .instructions {
+            font-size: 1rem;
+            color: #4A4A4A;
+            margin-bottom: 1rem;
+            text-align: center;
+            max-width: 600px;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out 0.2s forwards;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .start-btn, .home-btn, .restart-btn {
+            background: linear-gradient(45deg, #FF6F61, #FF8A80);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            color: #FFFFFF;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out 0.8s forwards;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .start-btn:hover, .home-btn:hover, .restart-btn:hover {
+            background: linear-gradient(45deg, #E65A50, #FF6F61);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .start-btn:active, .home-btn:active, .restart-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        #game-container {
+            background: #FFFFFF;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.4s forwards;
+            display: none;
+        }
+
+        .sentence {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            text-align: center;
+            color: #4B3A82;
+        }
+
+        .sentence input {
+            padding: 5px;
+            font-size: 1rem;
+            border: 1px solid #E5E5E5;
+            border-radius: 5px;
+            outline: none;
+            width: 100px;
+            text-align: center;
+            background: #F5F5F5;
+            cursor: default;
+        }
+
+        .sentence input.correct {
+            border-color: #28A745;
+            background: #E6F4EA;
+        }
+
+        .sentence input.incorrect {
+            border-color: #DC3545;
+            background: #FEE6E6;
+        }
+
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .option-btn {
+            background: #E5E5E5;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .option-btn:hover {
+            background: #D5D5D5;
+            transform: scale(1.03);
+        }
+
+        .option-btn:disabled {
+            background: #B0B0B0;
+            cursor: not-allowed;
+        }
+
+        #timer {
+            font-size: 1.1rem;
+            color: #FF6F61;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        #progress {
+            font-size: 1.1rem;
+            color: #4B3A82;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        #feedback {
+            margin-top: 15px;
+            font-size: 1rem;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        #score {
+            margin-top: 20px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #FF6F61;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out 0.6s forwards;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        #result {
+            background: #FFFFFF;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.4s forwards;
+            display: none;
+            text-align: center;
+        }
+
+        #result h2 {
+            font-size: 1.6rem;
+            color: #4B3A82;
+            margin-bottom: 0.8rem;
+        }
+
+        #result p {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        #result-score, #result-correct {
+            color: #FF6F61;
+            font-weight: bold;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .instructions {
+                font-size: 0.9rem;
+            }
+
+            .sentence {
+                font-size: 1.1rem;
+            }
+
+            .sentence input {
+                width: 80px;
+                font-size: 0.9rem;
+            }
+
+            .option-btn {
+                font-size: 0.9rem;
+                padding: 8px 15px;
+            }
+
+            #timer, #progress {
+                font-size: 1rem;
+            }
+
+            #score {
+                font-size: 1.1rem;
+            }
+
+            #result h2 {
+                font-size: 1.4rem;
+            }
+
+            #result p {
+                font-size: 1rem;
+            }
+
+            .start-btn, .home-btn, .restart-btn {
+                font-size: 0.9rem;
+                padding: 8px 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .instructions {
+                font-size: 0.8rem;
+            }
+
+            .sentence {
+                font-size: 1rem;
+            }
+
+            .sentence input {
+                width: 60px;
+                font-size: 0.8rem;
+            }
+
+            .option-btn {
+                font-size: 0.8rem;
+                padding: 6px 12px;
+            }
+
+            #timer, #progress {
+                font-size: 0.9rem;
+            }
+
+            #score {
+                font-size: 1rem;
+            }
+
+            #result h2 {
+                font-size: 1.2rem;
+            }
+
+            #result p {
+                font-size: 0.9rem;
+            }
+
+            .start-btn, .home-btn, .restart-btn {
+                font-size: 0.8rem;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Бос орынды толтыр</h1>
+    <div class="instructions" id="instructions">
+        <p>Ойын ережелері: Сөйлемдердегі бос орындарды дұрыс химиялық элементтермен немесе қосылыстармен толтырыңыз. Төмендегі нұсқалардан жауапты таңдаңыз. Сізде әр сұраққа 30 секунд уақыт бар. Дұрыс жауап үшін +10 ұпай, қате жауап үшін -5 ұпай алынады.</p>
+    </div>
+    <div class="button-container">
+        <button class="start-btn" onclick="startGame()">Ойнау</button>
+        <a href="/" class="home-btn">Басты бетке</a>
+    </div>
+    <div id="game-container">
+        <div id="timer">Уақыт: 30</div>
+        <div id="progress">Сұрақ: 1 / 7</div>
+        <div class="sentence" id="sentence"></div>
+        <div class="options" id="options"></div>
+        <div id="feedback"></div>
+    </div>
+    <div id="score">Ұпайлар: 0</div>
+    <div id="result" style="display: none;">
+        <h2>Ойын аяқталды! 🎉</h2>
+        <p>Дұрыс жауаптар: <span id="result-correct">0</span> / <span id="total-questions">0</span></p>
+        <p>Сіздің ұпайыңыз: <span id="result-score">0</span> / <span id="max-score">0</span></p>
+        <button class="restart-btn" onclick="restartGame()">Қайта ойнау</button>
+    </div>
+
+    <script>
+        const sentences = [
+            { sentence: "C₂H₂ + ( ___ ) → C₂H₄", answer: "H₂", options: ["H₂", "O₂", "Cl₂", "N₂"] },
+            { sentence: "( ___ ) + Cl₂ → 2NaCl + Br₂", answer: "NaBr", options: ["NaBr", "NaCl", "KBr", "KCl"] },
+            { sentence: "C₆H₆ + 3Cl₂ → ( ___ ) + 3HCl", answer: "C₆H₆Cl₆", options: ["C₆H₆Cl₆", "C₆H₆", "CCl₄", "C₂H₂"] },
+            { sentence: "2Al + 6HCl → 2AlCl₃ + ( ___ )", answer: "3H₂", options: ["3H₂", "H₂O", "Cl₂", "O₂"] },
+            { sentence: "CH₃COOH + C₂H₅OH → ( ___ ) + H₂O", answer: "CH₃COOC₂H₅", options: ["CH₃COOC₂H₅", "CH₃CH₂OH", "CH₃COOH", "C₂H₅OH"] },
+            { sentence: "Cu + ( ___ ) → Cu(NO₃)₂ + NO₂ + H₂O", answer: "4HNO₃", options: ["4HNO₃", "H₂SO₄", "HCl", "H₂O"] },
+            { sentence: "C₂H₄ + H₂O → ( ___ )", answer: "C₂H₅OH ", options: ["C₆H₆", "4HNO₃", "C₂H₅OH", "H₂SO₄"] },
+            { sentence: "SO₂ + ( ___ ) → H₂SO₄", answer: "O₂", options: ["O₂", "H₂", "N₂", "Cl₂"] }
+        ];
+
+        let currentSentence = 0;
+        let score = 0;
+        let correctAnswers = 0;
+        let gameStarted = false;
+        let timer;
+        let timeLeft = 30;
+        const totalQuestions = sentences.length;
+        const maxScore = totalQuestions * 10;
+
+        function startGame() {
+            document.getElementById('instructions').style.display = 'none';
+            document.querySelector('.start-btn').style.display = 'none';
+            document.getElementById('game-container').style.display = 'block';
+            document.getElementById('result').style.display = 'none';
+            gameStarted = true;
+            currentSentence = 0; // Сбрасываем индекс текущего вопроса
+            score = 0; // Сбрасываем очки
+            correctAnswers = 0; // Сбрасываем количество правильных ответов
+            document.getElementById('score').textContent = `Ұпайлар: ${score}`; // Обновляем отображение очков
+            renderSentence();
+        }
+
+        function startTimer() {
+            timeLeft = 30;
+            document.getElementById('timer').textContent = `Уақыт: ${timeLeft}`;
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = `Уақыт: ${timeLeft}`;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    checkAnswer(null);
+                }
+            }, 1000);
+        }
+
+        function renderSentence() {
+            if (currentSentence >= sentences.length) {
+                clearInterval(timer);
+                showResult();
+                return;
+            }
+
+            const sentenceDiv = document.getElementById('sentence');
+            const optionsDiv = document.getElementById('options');
+            const progressDiv = document.getElementById('progress');
+            const current = sentences[currentSentence];
+            sentenceDiv.innerHTML = `${current.sentence.replace('___', '<input type="text" id="answer-input" readonly placeholder="Жауапты таңдаңыз">')}`;
+            optionsDiv.innerHTML = '';
+            progressDiv.textContent = `Сұрақ: ${currentSentence + 1} / ${totalQuestions}`;
+
+            current.options.forEach(option => {
+                const optionBtn = document.createElement('button');
+                optionBtn.classList.add('option-btn');
+                optionBtn.textContent = option;
+                optionBtn.addEventListener('click', () => {
+                    document.getElementById('answer-input').value = option;
+                    checkAnswer(option);
+                });
+                optionsDiv.appendChild(optionBtn);
+            });
+
+            startTimer();
+        }
+
+        function checkAnswer(userAnswer) {
+            clearInterval(timer);
+            const input = document.getElementById('answer-input');
+            const correctAnswer = sentences[currentSentence].answer;
+            const feedbackDiv = document.getElementById('feedback');
+
+            if (userAnswer && userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+                input.classList.add('correct');
+                feedbackDiv.textContent = 'Дұрыс! 🎉';
+                feedbackDiv.style.color = '#28A745';
+                score += 10;
+                correctAnswers++;
+            } else {
+                input.classList.add('incorrect');
+                feedbackDiv.textContent = `Қате! Дұрыс жауап: ${correctAnswer}`;
+                feedbackDiv.style.color = '#DC3545';
+                score = Math.max(0, score - 5);
+            }
+
+            document.getElementById('score').textContent = `Ұпайлар: ${score}`;
+            input.disabled = true;
+            document.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
+
+            setTimeout(() => {
+                feedbackDiv.textContent = '';
+                currentSentence++;
+                renderSentence();
+            }, 1500);
+        }
+
+        function showResult() {
+            document.getElementById('game-container').style.display = 'none';
+            document.getElementById('score').style.display = 'none';
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            document.getElementById('result-correct').textContent = correctAnswers;
+            document.getElementById('total-questions').textContent = totalQuestions;
+            document.getElementById('result-score').textContent = score;
+            document.getElementById('max-score').textContent = maxScore;
+        }
+
+        function restartGame() {
+            currentSentence = 0;
+            score = 0;
+            correctAnswers = 0;
+            gameStarted = false;
+            document.getElementById('score').textContent = `Ұпайлар: ${score}`;
+            document.getElementById('score').style.display = 'block';
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('instructions').style.display = 'block';
+            document.querySelector('.start-btn').style.display = 'inline-block';
+        }
+    </script>
+</body>
+</html>

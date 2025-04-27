@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Тест тарихы{% endblock %}
+
+{% block content %}
+<section class="history-section">
+    <div class="history-header">
+        <h2>Тест тарихы</h2>
+        <a href="{% url 'tests' %}" class="back-btn">Артқа</a>
+    </div>
+    <div class="history-container">
+        {% if page_obj %}
+            <div class="history-table">
+                <div class="history-table-header">
+                    <span>Тест</span>
+                    <span>Нәтиже</span>
+                    <span>Күні</span>
+                    <span>Әрекеттер</span>
+                </div>
+                {% for history in page_obj %}
+                    <div class="history-item">
+                        <span class="history-subject">{{ history.subject.name }}</span>
+                        <span class="history-score">{{ history.score }} / {{ history.total }}</span>
+                        <span class="history-date">{{ history.created_at|date:"d.m.Y H:i" }}</span>
+                        <span class="history-action">
+                            <a href="{% url 'test-detail' history.id %}">Толығырақ</a>
+                            <a href="{% url 'test-view' history.subject.id %}">Қайталау</a>
+                        </span>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}">«</a>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                    <a href="?page={{ num }}" class="{% if page_obj.number == num %}active{% endif %}">{{ num }}</a>
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">»</a>
+                {% endif %}
+            </div>
+        {% else %}
+            <p class="no-history">Сізде әзірге тест тарихы жоқ.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

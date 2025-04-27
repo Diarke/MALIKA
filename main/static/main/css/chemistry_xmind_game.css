@@ -1,0 +1,323 @@
+body {
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    color: #2D2D2D;
+    font-family: 'Inter', 'Arial', sans-serif;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.game-container {
+    text-align: center;
+    max-width: 1200px;
+    width: 100%;
+}
+
+.game-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #5A3F98;
+    margin-bottom: 1.5rem;
+}
+
+.mindmap {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1.5rem;
+}
+
+.central-node {
+    background: linear-gradient(45deg, #5A3F98, #7B5FC7);
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 8px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+.branch {
+    position: absolute;
+    display: flex;
+    align-items: center;
+}
+
+.connector {
+    position: absolute;
+    height: 2px;
+    background: linear-gradient(to right, #5A3F98, transparent);
+    z-index: 0;
+}
+
+.branch-node {
+    background: linear-gradient(45deg, #FF6F61, #FF8A80);
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+}
+
+.drop-zone {
+    width: 200px;
+    min-height: 120px;
+    border: 2px dashed #5A3F98;
+    border-radius: 8px;
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.7);
+    transition: border 0.3s ease, background 0.3s ease;
+    z-index: 1;
+}
+
+.drop-zone.hover {
+    border: 2px solid #FF6F61;
+    background: rgba(255, 111, 97, 0.05);
+}
+
+.elements-branch {
+    top: 20%;
+    left: 60%;
+    transform: translateY(-50%);
+}
+
+.elements-branch .connector {
+    width: 100px;
+    left: -100px;
+}
+
+.compounds-branch {
+    top: 50%;
+    left: 70%;
+    transform: translateY(-50%);
+}
+
+.compounds-branch .connector {
+    width: 150px;
+    left: -150px;
+}
+
+.processes-branch {
+    top: 80%;
+    left: 60%;
+    transform: translateY(-50%);
+}
+
+.processes-branch .connector {
+    width: 100px;
+    left: -100px;
+}
+
+.cards-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.card {
+    background: linear-gradient(45deg, #ffffff, #f9fafb);
+    padding: 12px 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    cursor: move;
+    font-size: 1rem;
+    color: #2D2D2D;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.card:hover {
+    transform: scale(1.03);
+}
+
+.card.dragging {
+    opacity: 0.7;
+}
+
+.card.correct {
+    background: #D4EDDA;
+    border: 2px solid #34C759;
+}
+
+.card.incorrect {
+    background: #F8D7DA;
+    border: 2px solid #FF3B30;
+}
+
+.button-container {
+    margin-bottom: 1.5rem;
+}
+
+.check-btn {
+    padding: 10px 25px;
+    font-size: 1rem;
+    color: white;
+    background: linear-gradient(45deg, #FF6F61, #FF8A80);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.check-btn:hover {
+    background: linear-gradient(45deg, #E65A50, #FF6F61);
+    transform: scale(1.03);
+}
+
+.result {
+    background: #FFFFFF;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.result h2 {
+    font-size: 1.5rem;
+    color: #5A3F98;
+    margin-bottom: 0.8rem;
+}
+
+.result p {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+#score, #level {
+    color: #FF6F61;
+    font-weight: bold;
+}
+
+.restart-btn {
+    padding: 8px 18px;
+    background: linear-gradient(45deg, #5A3F98, #7B5FC7);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.restart-btn:hover {
+    background: linear-gradient(45deg, #4A3278, #5A3F98);
+    transform: scale(1.03);
+}
+
+.hidden {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .game-title {
+        font-size: 1.8rem;
+    }
+
+    .mindmap {
+        height: 600px;
+    }
+
+    .central-node {
+        font-size: 1.3rem;
+    }
+
+    .branch {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .connector {
+        width: 2px;
+        height: 50px;
+        top: -50px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(to bottom, #5A3F98, transparent);
+    }
+
+    .elements-branch {
+        top: 15%;
+    }
+
+    .compounds-branch {
+        top: 45%;
+    }
+
+    .processes-branch {
+        top: 75%;
+    }
+
+    .drop-zone {
+        width: 180px;
+        min-height: 100px;
+        margin-left: 0;
+        margin-top: 15px;
+    }
+
+    .branch-node {
+        font-size: 1rem;
+    }
+
+    .card {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+
+    .check-btn {
+        font-size: 0.9rem;
+        padding: 8px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .game-title {
+        font-size: 1.5rem;
+    }
+
+    .mindmap {
+        height: 700px;
+    }
+
+    .central-node {
+        font-size: 1.2rem;
+        padding: 8px 16px;
+    }
+
+    .drop-zone {
+        width: 160px;
+        min-height: 80px;
+    }
+
+    .branch-node {
+        font-size: 0.9rem;
+    }
+
+    .card {
+        padding: 8px 16px;
+        font-size: 0.85rem;
+    }
+}

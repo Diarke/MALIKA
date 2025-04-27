@@ -1,0 +1,136 @@
+/* Дене стилі */
+body {
+    background-color: #FFFFFF;
+    color: #2D2D2D;
+    font-family: 'Inter', Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Нәтижелер бөлімі */
+.result-section {
+    width: 100%;
+    max-width: 700px;
+    background-color: #F9FAFB;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+/* Тақырып бөлімі */
+.result-header {
+    margin-bottom: 30px;
+    position: relative;
+}
+
+/* Тақырып мәтіні */
+.result-header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #6A4BC3;
+    margin: 0 0 15px;
+}
+
+/* Бөлгіш сызық */
+.divider {
+    border: 0;
+    height: 2px;
+    background: linear-gradient(to right, transparent, #E5E5E5, transparent);
+    margin: 20px auto;
+    width: 80%;
+    max-width: 500px;
+}
+
+/* Артқа түймесі */
+.back-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #FFFFFF;
+    background-color: #6A4BC3;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.2s;
+    position: relative;
+    z-index: 1;
+}
+
+.back-btn:hover {
+    background-color: #503697;
+    transform: translateY(-2px);
+}
+
+/* Нәтиже мазмұны */
+.result-content {
+    display: flex;
+    justify-content: center;
+}
+
+/* Нәтиже ұпайы */
+.result-score h3 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #2D2D2D;
+    margin-bottom: 20px;
+}
+
+/* Диаграмма контейнері */
+.result-chart {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Прогресс шеңбері */
+.progress-ring {
+    width: 180px;
+    height: 180px;
+}
+
+/* Фон шеңбері */
+.progress-bg {
+    stroke: #E5E5E5;
+}
+
+/* Прогресс жолағы */
+.progress-bar {
+    transition: stroke-dasharray 0.6s ease-in-out;
+}
+
+/* Медиа сұраулар */
+@media (max-width: 600px) {
+    .result-section {
+        padding: 20px;
+    }
+
+    .result-header h2 {
+        font-size: 24px;
+    }
+
+    .result-score h3 {
+        font-size: 18px;
+    }
+
+    .progress-ring {
+        width: 150px;
+        height: 150px;
+    }
+
+    .progress-ring text {
+        font-size: 22px;
+    }
+
+    .back-btn {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+
+    .divider {
+        width: 90%;
+    }
+}

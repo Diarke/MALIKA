@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Тест нәтижелері{% endblock %}
+
+{% block content %}
+    <section class="result-section">
+        <div class="result-header">
+            <h2>Тест нәтижелері: {{ test_subject }}</h2>
+            <hr class="divider"><br>
+            <a href="{% url 'tests' %}" class="back-btn">Артқа</a>
+        </div>
+        <div class="result-content">
+            <div class="result-score">
+                <h3>Сіздің нәтижеңіз: {{ score }} / {{ total }}</h3>
+                <div class="result-chart">
+                    <svg width="180" height="180" viewBox="0 0 200 200" class="progress-ring" data-percentage="{{ correct_percentage|default:0 }}">
+                        <circle cx="100" cy="100" r="85" fill="none" stroke="#E5E5E5" stroke-width="12" class="progress-bg"/>
+                        <circle cx="100" cy="100" r="85" fill="none" stroke="#5A3F98" stroke-width="12" stroke-dasharray="0 534.07" stroke-linecap="round" transform="rotate(-90 100 100)" class="progress-bar"/>
+                        <text x="100" y="100" text-anchor="middle" dy=".3em" font-size="26" font-weight="bold" fill="#2D2D2D">{{ correct_percentage|default:"0" }}%</text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const progressRing = document.querySelector('.progress-ring');
+            const progressBar = progressRing.querySelector('.progress-bar');
+            const percentage = parseFloat(progressRing.getAttribute('data-percentage')) || 0;
+            const circumference = 2 * Math.PI * 85; // 534.07 for radius 85
+            const progressLength = (percentage / 100) * circumference;
+            progressBar.setAttribute('stroke-dasharray', `${progressLength} ${circumference}`);
+        });
+    </script>
+{% endblock %}

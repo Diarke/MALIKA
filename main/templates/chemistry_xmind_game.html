@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Химиялық XMind картасы</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            color: #2D2D2D;
+            font-family: 'Inter', 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            -webkit-tap-highlight-color: transparent;
+            overflow-x: hidden;
+        }
+
+        .game-container {
+            text-align: center;
+            max-width: 1200px;
+            width: 100%;
+            background: #FFFFFF;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .game-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #5A3F98;
+            margin-bottom: 0.5rem;
+        }
+
+        .instructions {
+            font-size: 1rem;
+            color: #4A4A4A;
+            margin-bottom: 1rem;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 1rem;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            color: #FF6F61;
+            font-weight: 500;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .check-btn, .home-btn, .restart-btn {
+            padding: 10px 25px;
+            font-size: 1rem;
+            color: white;
+            background: linear-gradient(45deg, #FF6F61, #FF8A80);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            touch-action: manipulation;
+        }
+
+        .check-btn:hover, .home-btn:hover, .restart-btn:hover {
+            background: linear-gradient(45deg, #E65A50, #FF6F61);
+            transform: scale(1.03);
+        }
+
+        .mindmap {
+            position: relative;
+            width: 100%;
+            height: auto;
+            background: #F9F9FB;
+            border-radius: 10px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+            overflow: visible;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-items: flex-start;
+            padding: 80px 10px 20px;
+            z-index: 1; /* Ensure mindmap is above cards-container */
+        }
+
+        .central-node {
+            background: linear-gradient(45deg, #5A3F98, #7B5FC7);
+            color: white;
+            font-size: 1.6rem;
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 10px;
+            position: absolute;
+            top: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+            z-index: 2;
+        }
+
+        .branch {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 220px;
+            margin: 10px;
+            position: relative;
+        }
+
+        .connector {
+            width: 3px;
+            height: 80px;
+            background: linear-gradient(to bottom, #5A3F98, transparent);
+            z-index: 0;
+        }
+
+        .branch-node {
+            background: linear-gradient(45deg, #FF6F61, #FF8A80);
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            text-align: center;
+        }
+
+        .drop-zone {
+            width: 100%;
+            min-height: 140px;
+            border: 2px dashed #5A3F98;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+            z-index: 1;
+            margin-top: 20px;
+        }
+
+        .drop-zone.hover {
+            border: 2px solid #FF6F61;
+            background: rgba(255, 111, 97, 0.1);
+            transform: scale(1.02);
+        }
+
+        .cards-container {
+            display: flex;
+            justify-content: flex-start;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+            padding: 15px;
+            background: #F9F9FB;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            z-index: 0; /* Ensure cards are below mindmap */
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border: 1px solid #e5e7eb; /* Visual cue for scrollable area */
+        }
+
+        .card {
+            background: linear-gradient(45deg, #ffffff, #f9fafb);
+            padding: 14px 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            cursor: move;
+            font-size: 1.1rem;
+            color: #2D2D2D;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            touch-action: none;
+            user-select: none;
+            z-index: 10;
+            flex: 0 0 auto; /* Prevent cards from shrinking */
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card.dragging {
+            opacity: 0.7;
+            transform: scale(1.1);
+            z-index: 1000;
+        }
+
+        .card.correct {
+            background: #D4EDDA;
+            border: 2px solid #34C759;
+        }
+
+        .card.incorrect {
+            background: #F8D7DA;
+            border: 2px solid #FF3B30;
+        }
+
+        .result {
+            background: #FFFFFF;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .result h2 {
+            font-size: 1.6rem;
+            color: #5A3F98;
+            margin-bottom: 0.8rem;
+        }
+
+        .result p {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        #score, #level, #time-taken, #moves {
+            color: #FF6F61;
+            font-weight: bold;
+        }
+
+        .restart-btn {
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #5A3F98, #7B5FC7);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .restart-btn:hover {
+            background: linear-gradient(45deg, #4A3278, #5A3F98);
+            transform: scale(1.03);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .mindmap {
+                flex-direction: column;
+                align-items: center;
+                padding-top: 80px;
+            }
+
+            .branch {
+                width: 90%;
+                margin: 20px 0;
+            }
+
+            .drop-zone {
+                width: 100%;
+                min-height: 120px;
+            }
+
+            .cards-container {
+                justify-content: flex-start;
+                gap: 10px;
+                padding: 10px;
+            }
+
+            .card {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .game-title {
+                font-size: 1.8rem;
+            }
+
+            .instructions {
+                font-size: 0.9rem;
+            }
+
+            .stats {
+                font-size: 0.9rem;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .check-btn, .home-btn, .restart-btn {
+                font-size: 0.9rem;
+                padding: 8px 20px;
+            }
+
+            .central-node {
+                font-size: 1.3rem;
+                top: 3%;
+            }
+
+            .branch-node {
+                font-size: 1rem;
+            }
+
+            .card {
+                padding: 8px 16px;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .game-container {
+                padding: 15px;
+            }
+
+            .game-title {
+                font-size: 1.5rem;
+            }
+
+            .instructions {
+                font-size: 0.8rem;
+            }
+
+            .stats {
+                font-size: 0.8rem;
+            }
+
+            .check-btn, .home-btn, .restart-btn {
+                font-size: 0.8rem;
+                padding: 6px 15px;
+            }
+
+            .central-node {
+                font-size: 1.2rem;
+                padding: 8px 16px;
+                top: 2%;
+            }
+
+            .branch {
+                width: 100%;
+            }
+
+            .drop-zone {
+                width: 100%;
+                min-height: 100px;
+            }
+
+            .branch-node {
+                font-size: 0.9rem;
+            }
+
+            .cards-container {
+                display: flex;
+                flex-wrap: nowrap; /* Ensure cards are in a single row */
+                overflow-x: auto;
+                gap: 8px;
+                padding: 10px;
+            }
+
+            .card {
+                padding: 8px 16px;
+                font-size: 0.85rem;
+                min-width: 100px; /* Ensure cards are wide enough to read */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1 class="game-title">Химиялық XMind картасы</h1>
+        <div class="instructions">
+            <p>Карточкаларды тиісті категорияларға сүйреп апарыңыз. Уақыт пен қозғалыс саны есептеледі. Деңгейіңізді білу үшін "Тексеру" батырмасын басыңыз.</p>
+        </div>
+        <div class="stats">
+            <div>Уақыт: <span id="timer">0</span> сек</div>
+            <div>Қозғалыстар: <span id="move-count">0</span></div>
+        </div>
+        <div class="button-container">
+            <button id="check-btn" class="check-btn">Тексеру</button>
+            <a href="/" class="home-btn">Басты бетке</a>
+        </div>
+        <div class="mindmap" id="mindmap">
+            <div class="central-node">Химия</div>
+            <div class="branch alkanes-branch">
+                <div class="connector"></div>
+                <div class="branch-node">Алкандар</div>
+                <div class="drop-zone" data-category="alkanes"></div>
+            </div>
+            <div class="branch alkenes-branch">
+                <div class="connector"></div>
+                <div class="branch-node">Алкендер</div>
+                <div class="drop-zone" data-category="alkenes"></div>
+            </div>
+            <div class="branch alkynes-branch">
+                <div class="connector"></div>
+                <div class="branch-node">Алкиндер</div>
+                <div class="drop-zone" data-category="alkynes"></div>
+            </div>
+            <div class="branch sources-branch">
+                <div class="connector"></div>
+                <div class="branch-node">Көмірсутектердің табиғи көздері</div>
+                <div class="drop-zone" data-category="sources"></div>
+            </div>
+            <div class="branch alcohols-branch">
+                <div class="connector"></div>
+                <div class="branch-node">Спирттер</div>
+                <div class="drop-zone" data-category="alcohols"></div>
+            </div>
+            <div class="branch acids-branch">
+                <div class="connector"></div>
+                <div class="branch-node">Карбон қышқылдары</div>
+                <div class="drop-zone" data-category="acids"></div>
+            </div>
+        </div>
+        <div class="cards-container" id="cards-container">
+            <!-- Карточки будут добавлены через JavaScript -->
+        </div>
+        <div id="result" class="result hidden">
+            <h2>Нәтиже</h2>
+            <p>Ұпай: <span id="score">0</span> / 11</p>
+            <p>Уақыт: <span id="time-taken">0</span> сек</p>
+            <p>Қозғалыстар: <span id="moves">0</span></p>
+            <p>Сіздің деңгейіңіз: <span id="level">-</span></p>
+            <button id="restart-btn" class="restart-btn">Қайта ойнау</button>
+        </div>
+    </div>
+
+    <script>
+        const cardsData = [
+            { text: "CₙH₂ₙ₊₂", category: "alkanes", difficulty: 1 },
+            { text: "CₙH₂ₙ", category: "alkenes", difficulty: 1 },
+            { text: "CₙH₂ₙ₋₂", category: "alkynes", difficulty: 1 },
+            { text: "Мұнай", category: "sources", difficulty: 1 },
+            { text: "C₂H₅OH", category: "alcohols", difficulty: 1 },
+            { text: "CH₃COOH", category: "acids", difficulty: 1 },
+            { text: "CH₄", category: "alkanes", difficulty: 2 },
+            { text: "C₂H₄", category: "alkenes", difficulty: 2 },
+            { text: "Таскөмір", category: "sources", difficulty: 2 },
+            { text: "Октин", category: "alkynes", difficulty: 2 },
+            { text: "Табиғи газ", category: "sources", difficulty: 2 },
+            { text: "Метанол", category: "alcohols", difficulty: 2 },
+            { text: "Құрамында бір немесе бірнеше карбоксил тобы бар (-COOH-)", category: "acids", difficulty: 2 },
+        ];
+
+        let score = 0;
+        let totalDifficulty = cardsData.reduce((sum, card) => sum + card.difficulty, 0);
+        let placedCards = new Map();
+        let isGameLocked = false;
+        let moveCount = 0;
+        let startTime = null;
+        let timerInterval = null;
+        let draggedElement = null;
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        function initializeGame() {
+            startTime = Date.now();
+            moveCount = 0;
+            document.getElementById('move-count').textContent = moveCount;
+            startTimer();
+
+            const cardsContainer = document.getElementById('cards-container');
+            cardsContainer.innerHTML = '';
+            cardsData.forEach((card, index) => {
+                const cardElement = document.createElement('div');
+                cardElement.classList.add('card');
+                cardElement.setAttribute('draggable', 'true');
+                cardElement.setAttribute('data-category', card.category);
+                cardElement.setAttribute('data-id', `card-${index}`);
+                cardElement.textContent = card.text;
+                cardsContainer.appendChild(cardElement);
+            });
+
+            document.querySelectorAll('.card').forEach(card => {
+                card.addEventListener('dragstart', dragStart);
+                card.addEventListener('dragend', dragEnd);
+                card.addEventListener('touchstart', touchStart);
+                card.addEventListener('touchmove', touchMove);
+                card.addEventListener('touchend', touchEnd);
+            });
+
+            document.querySelectorAll('.drop-zone').forEach(zone => {
+                zone.addEventListener('dragover', dragOver);
+                zone.addEventListener('drop', drop);
+                zone.addEventListener('dragenter', dragEnter);
+                zone.addEventListener('dragleave', dragLeave);
+            });
+
+            document.getElementById('check-btn').addEventListener('click', checkAnswers);
+            document.getElementById('restart-btn').addEventListener('click', restartGame);
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                document.getElementById('timer').textContent = elapsed;
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
+        function dragStart(e) {
+            if (isGameLocked) return;
+            e.dataTransfer.setData('text/plain', e.target.dataset.id);
+            e.target.classList.add('dragging');
+            draggedElement = e.target;
+        }
+
+        function dragEnd(e) {
+            if (isGameLocked) return;
+            e.target.classList.remove('dragging');
+            draggedElement = null;
+        }
+
+        function dragOver(e) {
+            if (isGameLocked) return;
+            e.preventDefault();
+        }
+
+        function dragEnter(e) {
+            if (isGameLocked) return;
+            e.preventDefault();
+            const dropZone = e.target.closest('.drop-zone');
+            if (dropZone) {
+                dropZone.classList.add('hover');
+            }
+        }
+
+        function dragLeave(e) {
+            if (isGameLocked) return;
+            const dropZone = e.target.closest('.drop-zone');
+            if (dropZone) {
+                dropZone.classList.remove('hover');
+            }
+        }
+
+        function drop(e) {
+            if (isGameLocked) return;
+            e.preventDefault();
+            const cardId = e.dataTransfer.getData('text/plain');
+            const card = document.querySelector(`.card[data-id="${cardId}"]`);
+            const dropZone = e.target.closest('.drop-zone');
+
+            if (!card || !dropZone) return;
+
+            dropZone.classList.remove('hover');
+            moveCount++;
+            document.getElementById('move-count').textContent = moveCount;
+
+            if (placedCards.has(cardId)) {
+                const previousDropZone = placedCards.get(cardId);
+                const cardClone = previousDropZone.querySelector(`.card[data-id="${cardId}"]`);
+                if (cardClone) {
+                    previousDropZone.removeChild(cardClone);
+                }
+            }
+
+            const cardClone = card.cloneNode(true);
+            cardClone.setAttribute('draggable', 'true');
+            cardClone.classList.remove('dragging');
+            cardClone.addEventListener('dragstart', dragStart);
+            cardClone.addEventListener('dragend', dragEnd);
+            cardClone.addEventListener('touchstart', touchStart);
+            cardClone.addEventListener('touchmove', touchMove);
+            cardClone.addEventListener('touchend', touchEnd);
+            dropZone.appendChild(cardClone);
+            placedCards.set(cardId, dropZone);
+
+            const originalCard = document.getElementById('cards-container').querySelector(`.card[data-id="${cardId}"]`);
+            if (originalCard) {
+                originalCard.remove();
+            }
+        }
+
+        function touchStart(e) {
+            if (isGameLocked) return;
+            e.preventDefault();
+            draggedElement = e.target;
+            draggedElement.classList.add('dragging');
+            const touch = e.touches[0];
+            touchStartX = touch.clientX - (draggedElement.offsetWidth / 2);
+            touchStartY = touch.clientY - (draggedElement.offsetHeight / 2);
+            draggedElement.style.position = 'fixed';
+            draggedElement.style.left = `${touchStartX}px`;
+            draggedElement.style.top = `${touchStartY}px`;
+            draggedElement.style.zIndex = '1000';
+        }
+
+        function touchMove(e) {
+            if (isGameLocked || !draggedElement) return;
+            e.preventDefault();
+            const touch = e.touches[0];
+            const newX = touch.clientX - (draggedElement.offsetWidth / 2);
+            const newY = touch.clientY - (draggedElement.offsetHeight / 2);
+            draggedElement.style.left = `${newX}px`;
+            draggedElement.style.top = `${newY}px`;
+
+            const dropZones = document.querySelectorAll('.drop-zone');
+            dropZones.forEach(zone => {
+                const rect = zone.getBoundingClientRect();
+                if (
+                    touch.clientX >= rect.left &&
+                    touch.clientX <= rect.right &&
+                    touch.clientY >= rect.top &&
+                    touch.clientY <= rect.bottom
+                ) {
+                    zone.classList.add('hover');
+                } else {
+                    zone.classList.remove('hover');
+                }
+            });
+        }
+
+        function touchEnd(e) {
+            if (isGameLocked || !draggedElement) return;
+            e.preventDefault();
+            draggedElement.classList.remove('dragging');
+            draggedElement.style.position = '';
+            draggedElement.style.left = '';
+            draggedElement.style.top = '';
+            draggedElement.style.zIndex = '';
+
+            const touch = e.changedTouches[0];
+            const dropZones = document.querySelectorAll('.drop-zone');
+            let dropped = false;
+
+            dropZones.forEach(dropZone => {
+                const rect = dropZone.getBoundingClientRect();
+                if (
+                    touch.clientX >= rect.left &&
+                    touch.clientX <= rect.right &&
+                    touch.clientY >= rect.top &&
+                    touch.clientY <= rect.bottom
+                ) {
+                    const cardId = draggedElement.dataset.id;
+                    const card = draggedElement;
+
+                    dropZone.classList.remove('hover');
+                    moveCount++;
+                    document.getElementById('move-count').textContent = moveCount;
+
+                    if (placedCards.has(cardId)) {
+                        const previousDropZone = placedCards.get(cardId);
+                        const cardClone = previousDropZone.querySelector(`.card[data-id="${cardId}"]`);
+                        if (cardClone) {
+                            previousDropZone.removeChild(cardClone);
+                        }
+                    }
+
+                    const cardClone = card.cloneNode(true);
+                    cardClone.setAttribute('draggable', 'true');
+                    cardClone.classList.remove('dragging');
+                    cardClone.addEventListener('dragstart', dragStart);
+                    cardClone.addEventListener('dragend', dragEnd);
+                    cardClone.addEventListener('touchstart', touchStart);
+                    cardClone.addEventListener('touchmove', touchMove);
+                    cardClone.addEventListener('touchend', touchEnd);
+                    dropZone.appendChild(cardClone);
+                    placedCards.set(cardId, dropZone);
+
+                    const originalCard = document.getElementById('cards-container').querySelector(`.card[data-id="${cardId}"]`);
+                    if (originalCard) {
+                        originalCard.remove();
+                    }
+
+                    dropped = true;
+                }
+            });
+
+            if (!dropped) {
+                draggedElement.style.position = '';
+                draggedElement.style.left = '';
+                draggedElement.style.top = '';
+            }
+
+            draggedElement = null;
+            dropZones.forEach(zone => zone.classList.remove('hover'));
+        }
+
+        function checkAnswers() {
+            if (isGameLocked) return;
+            stopTimer();
+            score = 0;
+            placedCards.forEach((dropZone, cardId) => {
+                const card = document.querySelector(`.card[data-id="${cardId}"]`);
+                const cardClone = dropZone.querySelector(`.card[data-id="${cardId}"]`);
+                const cardCategory = card.dataset.category;
+                const zoneCategory = dropZone.dataset.category;
+                const cardIndex = parseInt(cardId.split('-')[1]);
+                const difficulty = cardsData[cardIndex].difficulty;
+
+                if (cardCategory === zoneCategory) {
+                    score += difficulty;
+                    card.classList.add('correct');
+                    cardClone.classList.add('correct');
+                } else {
+                    card.classList.add('incorrect');
+                    cardClone.classList.add('incorrect');
+                }
+            });
+
+            isGameLocked = true;
+            showResult();
+        }
+
+        function showResult() {
+            const timeTaken = Math.floor((Date.now() - startTime) / 1000);
+            let level = '';
+
+            const maxScore = totalDifficulty;
+            const scorePercentage = (score / maxScore) * 100;
+
+            let timeBonus = 0;
+            if (timeTaken < 30) {
+                timeBonus = 20;
+            } else if (timeTaken <= 60) {
+                timeBonus = 10;
+            }
+
+            let moveBonus = 0;
+            if (moveCount < 10) {
+                moveBonus = 20;
+            } else if (moveCount <= 15) {
+                moveBonus = 10;
+            }
+
+            const finalScore = scorePercentage + timeBonus + moveBonus;
+
+            if (finalScore >= 90) {
+                level = 'Сарапшы';
+            } else if (finalScore >= 70) {
+                level = 'Жоғары деңгей';
+            } else if (finalScore >= 50) {
+                level = 'Орташа';
+            } else if (finalScore >= 30) {
+                level = 'Бастапқы';
+            } else {
+                level = 'Жаңадан бастаушы';
+            }
+
+            document.getElementById('score').textContent = score;
+            document.getElementById('time-taken').textContent = timeTaken;
+            document.getElementById('moves').textContent = moveCount;
+            document.getElementById('level').textContent = level;
+            document.getElementById('result').classList.remove('hidden');
+            document.getElementById('check-btn').classList.add('hidden');
+        }
+
+        function restartGame() {
+            score = 0;
+            placedCards.clear();
+            moveCount = 0;
+            isGameLocked = false;
+            document.querySelectorAll('.card').forEach(card => {
+                card.classList.remove('correct', 'incorrect');
+            });
+            document.querySelectorAll('.drop-zone').forEach(zone => {
+                zone.innerHTML = '';
+            });
+            document.getElementById('result').classList.add('hidden');
+            document.getElementById('check-btn').classList.remove('hidden');
+            document.getElementById('timer').textContent = '0';
+            document.getElementById('move-count').textContent = '0';
+            initializeGame();
+        }
+
+        initializeGame();
+    </script>
+</body>
+</html>

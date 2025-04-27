@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ subject.name }}</title>
+    <link rel="stylesheet" href="{% static 'main/css/test.css' %}"> 
+    <style>
+        /* Prevent text selection for questions and answers */
+        .question, .answer-text {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-wrapper">
+        <div class="test-header">
+            <h1 class="test-title">{{ subject.name }}</h1>
+            <a href="{% url 'tests' %}" class="btn-back">Тесттен шығу</a>
+        </div>
+
+        <form method="POST" class="test-form">
+            {% csrf_token %}
+            {% for question in questions %}
+                <div class="question-card">
+                    <h2 class="question">{{ question.questions }}</h2>
+                    <div class="answers-grid">
+                        {% for answer in question.answers_set.all %}
+                            <label class="answer-card">
+                                <input type="radio" name="{{ question.id }}" value="{{ answer.id }}" class="answer-input">
+                                <span class="answer-letter">
+                                    {% if forloop.counter == 1 %}A
+                                    {% elif forloop.counter == 2 %}B
+                                    {% elif forloop.counter == 3 %}C
+                                    {% elif forloop.counter == 4 %}D
+                                    {% endif %}
+                                </span>
+                                <span class="answer-text">{{ answer.answer }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn-submit">Тестті аяқтау</button>
+        </form>
+    </div>
+
+    <script>
+        // Prevent text copying and context menu for questions and answers
+        document.querySelectorAll('.question, .answer-text').forEach(element => {
+            // Disable context menu (right-click)
+            element.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+            });
+
+            // Prevent copy action
+            element.addEventListener('copy', (e) => {
+                e.preventDefault();
+            });
+
+            // Prevent text selection on drag
+            element.addEventListener('selectstart', (e) => {
+                e.preventDefault();
+            });
+        });
+
+        // Handle answer card selection
+        document.querySelectorAll('.answer-card').forEach(label => {
+            label.addEventListener('click', function() {
+                let parent = this.closest('.answers-grid');
+                parent.querySelectorAll('.answer-card').forEach(el => {
+                    el.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                // Ensure radio button is checked
+                this.querySelector('.answer-input').checked = true;
+            });
+        });
+    </script>
+</body>
+</html>
